@@ -20,7 +20,11 @@ namespace Ordering.Infrastucture
             services.AddScoped(typeof(IAsyncRepository<>), typeof(RepositoryBase<>));
             services.AddScoped<IOrderRepository, OrderRepository>();
 
-            services.Configure<EmailSettings>(c => configuration.GetSection("EmailSettings"));
+            services.Configure<EmailSettings>(c => {
+                c.FromName = configuration["EmailSettings:FromAddress"];
+                c.ApiKey = configuration["EmailSettings:ApiKey"];
+                c.FromAddress = configuration["EmailSettings:FromAddress"];
+            });
             services.AddTransient<IEmailService, EmailService>();
 
             return services;
