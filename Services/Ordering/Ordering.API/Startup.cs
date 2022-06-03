@@ -33,19 +33,20 @@ namespace Ordering.API
             services.AddApplicationServices();
             services.AddInfrastructureServices(Configuration);
 
-            services.AddMassTransit(config => {
-                config.UsingRabbitMq((ctx, cfg) => {
-                    cfg.Host(Configuration["EventBusSettings:HostAddress"]);
-                    cfg.ReceiveEndpoint(EventBusConstants.BasketCheckoutQueue, c => {
-                        c.ConfigureConsumer<BasketCheckoutConsumer>(ctx);
-                    });
-                });
-            });
-            services.AddMassTransitHostedService();
-
             // General Configuration
             services.AddAutoMapper(typeof(Startup));
             services.AddScoped<BasketCheckoutConsumer>();
+
+            services.AddMassTransit(config => {
+                config.UsingRabbitMq((ctx, cfg) => {
+                    cfg.Host(Configuration["EventBusSettings:HostAddress"]);
+                    //cfg.ReceiveEndpoint(EventBusConstants.BasketCheckoutQueue, c => {
+                    //    c.ConfigureConsumer<BasketCheckoutConsumer>(ctx);
+                    //});
+                });
+                services.AddGenericRequestClient();
+            });
+            services.AddMassTransitHostedService(true);
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
