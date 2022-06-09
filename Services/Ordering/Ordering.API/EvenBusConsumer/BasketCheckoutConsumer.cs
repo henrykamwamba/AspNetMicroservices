@@ -24,9 +24,9 @@ namespace Ordering.API.EvenBusConsumer
 
         public async Task Consume(ConsumeContext<BasketCheckoutEvent> context)
         {
+            _logger.LogInformation($"BasketCheckoutEvent consumed successfully. Created Order Id : {context.Message.UserName}");
             var command = _mapper.Map<CheckoutOrderCommand>(context.Message);
             var result = await _mediator.Send(command);
-
             _logger.LogInformation("BasketCheckoutEvent consumed successfully. Created Order Id : {newOrderId}", result);
         }
     }

@@ -32,6 +32,7 @@ namespace Ordering.Application.Features.Orders.Commands.CheckoutOrder
             var newOrder = await _orderRepository.AddAsync(orderEntity);
 
             _logger.LogInformation($"Order {newOrder.Id} is successfully created.");
+            _logger.LogInformation("SendEmail................................................");
 
             await SendMail(newOrder);
 
@@ -40,10 +41,11 @@ namespace Ordering.Application.Features.Orders.Commands.CheckoutOrder
 
         private async Task SendMail(Order order)
         {
-            var email = new Email() { To = "ezozkme@gmail.com", Body = $"Order was created.", Subject = "Order was created" };
+            var email = new Email() { To = "henrykamwamba@gmail.com", Body = "Order was created.", Subject = "Order was created" };
 
             try
             {
+                _logger.LogError("SendEmail................................................");
                 await _emailService.SendEmail(email);
             }
             catch (Exception ex)
